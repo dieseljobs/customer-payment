@@ -57,6 +57,7 @@ class TestCase extends BaseTestCase
             'driver' => 'sqlite',
             'database' => ':memory:'
         ]);
+        $app['config']->set('customer_payment.model', \TheLHC\CustomerPayment\Tests\User::class);
     }
 
     /**
@@ -72,8 +73,14 @@ class TestCase extends BaseTestCase
                 $table->string('email');
                 $table->string('name');
                 $table->string('stripe_id')->nullable();
-                //$table->string('card_brand')->nullable();
-                //$table->string('card_last_four')->nullable();
+            });
+
+            $this->schema->create('payment_profiles', function ($table) {
+                $table->increments('id');
+                $table->integer('user_id');
+                $table->string('stripe_card_id')->nullable();
+                $table->string('card_brand')->nullable();
+                $table->string('card_last_four')->nullable();
                 //$table->timestamps();
             });
         }
@@ -87,6 +94,7 @@ class TestCase extends BaseTestCase
     protected function rollbackTestMigrations()
     {
         $this->schema->drop('users');
+        $this->schema->drop('payment_profiles');
     }
 
     protected function getPackageProviders($app)
@@ -97,7 +105,7 @@ class TestCase extends BaseTestCase
     protected function getPackageAliases($app)
     {
         return [
-            'PaymentProcessor' => 'TheLHC\CustomerPayment\CustomerPaymentFacade'
+            'PaymentProcessor' => 'TheLHC\CustomerPayment\Facades\PaymentProcessor'
         ];
     }
 

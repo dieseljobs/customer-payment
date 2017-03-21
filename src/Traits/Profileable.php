@@ -1,7 +1,8 @@
 <?php
 
-namespace TheLHC\CustomerPayment;
-use PaymentProcessor;
+namespace TheLHC\CustomerPayment\Traits;
+
+use TheLHC\CustomerPayment\Facades\PaymentProcessor;
 
 trait Profileable
 {
@@ -23,7 +24,7 @@ trait Profileable
     /**
      * Retrieve the customer profile identifier value (Model accessor)
      *
-     * @param  string $value
+     * @param  null $value
      * @return string
      */
     public function getCustomerProfileIdAttribute($value)
@@ -31,6 +32,19 @@ trait Profileable
         $col = $this->getCustomerProfileIdColumn();
 
         return $this->$col;
+    }
+
+    /**
+     * Determine if model has attached customer profile accessor
+     *
+     * @param  null $value
+     * @return boolean
+     */
+    public function getHasCustomerProfileAttribute($value)
+    {
+        $col = $this->getCustomerProfileIdColumn();
+
+        return !empty($this->$col);
     }
 
     /**

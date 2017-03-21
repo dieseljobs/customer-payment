@@ -27,30 +27,31 @@ class StripePaymentProvider implements PaymentProcessorInterface
      * @var array
      */
     private $customerParams = [
-        'account_balance' => [
-            'required' => false
-        ],
-        'coupon' => [
-            'required' => false
-        ],
-        'description' => [
-            'required' => false
-        ],
-        'email' => [
-            'required' => false
-        ],
-        'metadata' => [
-            'required' => false
-        ],
-        'source' => [
-            'required' => false
-        ]
+        'account_balance',
+        'coupon',
+        'email',
+        'metadata',
+        'source'
+    ];
+
+    private $paymentParams = [
+        'number',
+        'exp_month',
+        'exp_year',
+        'cvc',
+        'address_city',
+        'address_line1',
+        'address_line2',
+        'address_state',
+        'address_zip',
+        'name',
+        'metadata'
     ];
 
     /**
      * Setup new instance with configuration values
      *
-     * @param array $config 
+     * @param array $config
      */
     public function __construct($config)
     {
@@ -82,6 +83,20 @@ class StripePaymentProvider implements PaymentProcessorInterface
         return 'stripe_id';
     }
 
+    public function getPaymentProfileKey()
+    {
+        return 'id';
+    }
+
+    public function getPaymentIdColumn()
+    {
+        if (isset($this->config['payment_id_column'])) {
+            return $this->config['payment_id_column'];
+        }
+
+        return 'stripe_card_id';
+    }
+
     /**
      * Create customer profile from params
      *
@@ -90,7 +105,7 @@ class StripePaymentProvider implements PaymentProcessorInterface
      */
     public function createCustomerProfile($params)
     {
-        $sendParams = $this->validateCustomerParams($params);
+        $sendParams = $this->verifyParams($params, $this->customerParams);
         $customer = $this->stripe->customers()->create($sendParams);
 
         return (object)$customer;
@@ -118,7 +133,7 @@ class StripePaymentProvider implements PaymentProcessorInterface
      */
     public function updateCustomerProfile($id, $params)
     {
-        $sendParams = $this->validateCustomerParams($params);
+        $sendParams = $this->verifyParams($params, $this->customerParams);
         $customer = $this->stripe->customers()->update($id, $sendParams);
 
         return (object)$customer;
@@ -137,17 +152,48 @@ class StripePaymentProvider implements PaymentProcessorInterface
         return (isset($response['deleted']) and $response['deleted']);
     }
 
+    public function createPaymentProfile($customerId, $params)
+    {
+        $sendParams = $this->verifyParams($params, $this->paymentParams);
+        $card = $this->stripe->cards()->create($customerId, $sendParams);
+
+        return (object)$card;
+    }
+
+    public function findPaymentProfile($customerId, $paymentId)
+    {
+        $card = $this->stripe->cards()->find($customerId, $paymentId);
+
+        return (object)$card;
+    }
+
+    public function updatePaymentProfile($customerId, $paymentId, $params)
+    {
+        $sendParams = $this->verifyParams($params, $this->paymentParams);
+        $card = $this->stripe->cards()->update($customerId, $paymentId, $sendParams);
+
+        return (object)$card;
+    }
+
+    public function deletePaymentProfile($customerId, $paymentId)
+    {
+        $response = $this->stripe->cards()->delete($customerId, $paymentId);
+
+        return (isset($response['deleted']) and $response['deleted']);
+    }
+
     /**
-     * Validate and normalize incoming create/update customer profile parameters
+     * Verify and normalize incoming parameters
      *
      * @param  array $params
+     * @param  array $checkParams   parameters to verify against
      * @return array
      */
-    private function validateCustomerParams($params)
+    private function verifyParams($params, $checkParams)
     {
         $sendParams = [];
         foreach($params as $key => $val) {
-            if (isset($this->customerParams[$key])) {
+            if (in_array($key, $checkParams)) {
                 $sendParams[$key] = $val;
             }
         }

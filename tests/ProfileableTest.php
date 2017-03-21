@@ -1,12 +1,13 @@
 <?php
 
 use TheLHC\CustomerPayment\Tests\TestCase;
+use TheLHC\CustomerPayment\Tests\User;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
-class CustomerPaymentTest extends TestCase
+class ProfileableTest extends TestCase
 {
 
-    public $stripe_id = "cus_AKAkDuF6w8EaWp";
+    public $stripe_id = "cus_AKAtaFldeKfE7x";
 
     public function testCanCreateCustomerProfile()
     {
@@ -51,13 +52,4 @@ class CustomerPaymentTest extends TestCase
         $profile = $user->deleteCustomerProfile();
         $this->assertEquals(true, empty($user->stripe_id));
     }
-}
-
-class User extends Eloquent
-{
-    use TheLHC\CustomerPayment\Profileable;
-
-    public $timestamps = false;
-
-    public $customerProfileIdColumn = "foobar_id";
 }

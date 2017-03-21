@@ -32,4 +32,15 @@ return [
 
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Customer Model
+    |--------------------------------------------------------------------------
+    |
+    | Specify the model class used for customer and payment profile data
+    |
+    */
+
+    'model' => App\Models\User::class,
+
 ];

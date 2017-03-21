@@ -1,10 +1,10 @@
 <?php
 
-namespace TheLHC\CustomerPayment;
+namespace TheLHC\CustomerPayment\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class CustomerPaymentFacade extends Facade
+class PaymentProcessor extends Facade
 {
     /**
      * Get the registered name of the component.

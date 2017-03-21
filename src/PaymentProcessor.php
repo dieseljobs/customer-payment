@@ -41,6 +41,16 @@ class PaymentProcessor implements PaymentProcessorInterface
         return $this->provider->getCustomerIdColumn();
     }
 
+    public function getPaymentProfileKey()
+    {
+        return $this->provider->getPaymentProfileKey();
+    }
+
+    public function getPaymentIdColumn()
+    {
+        return $this->provider->getPaymentIdColumn();
+    }
+
     /**
      * Create customer profile from params
      *
@@ -84,5 +94,36 @@ class PaymentProcessor implements PaymentProcessorInterface
     public function deleteCustomerProfile($id)
     {
         return $this->provider->deleteCustomerProfile($id);
+    }
+
+    /**
+     * Create customer payment profile from params
+     *
+     * @param  string  $customerId
+     * @param  array $params
+     * @return mixed
+     */
+    public function createPaymentProfile($customerId, $params)
+    {
+        return $this->provider->createPaymentProfile($customerId, $params);
+    }
+
+    public function findPaymentProfile($customerId, $paymentId)
+    {
+        return $this->provider->findPaymentProfile($customerId, $paymentId);
+    }
+
+    public function updatePaymentProfile($customerId, $paymentId, $params)
+    {
+        return $this->provider->updatePaymentProfile(
+            $customerId,
+            $paymentId,
+            $params
+        );
+    }
+
+    public function deletePaymentProfile($customerId, $paymentId)
+    {
+        return $this->provider->deletePaymentProfile($customerId, $paymentId);
     }
 }
