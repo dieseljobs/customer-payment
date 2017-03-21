@@ -34,6 +34,11 @@ class StripePaymentProvider implements PaymentProcessorInterface
         'source'
     ];
 
+    /**
+     * Permissible create/update payment profile parameters
+     *
+     * @var array
+     */
     private $paymentParams = [
         'number',
         'exp_month',
@@ -83,11 +88,21 @@ class StripePaymentProvider implements PaymentProcessorInterface
         return 'stripe_id';
     }
 
+    /**
+     * The payment profile indentifier passed in response objects
+     *
+     * @return string
+     */
     public function getPaymentProfileKey()
     {
         return 'id';
     }
 
+    /**
+     * The table column name to store/retrieve payment profile ids
+     *
+     * @return string
+     */
     public function getPaymentIdColumn()
     {
         if (isset($this->config['payment_id_column'])) {
@@ -152,6 +167,13 @@ class StripePaymentProvider implements PaymentProcessorInterface
         return (isset($response['deleted']) and $response['deleted']);
     }
 
+    /**
+     * Create customer payment profile from params
+     *
+     * @param  string  $customerId
+     * @param  array $params
+     * @return mixed
+     */
     public function createPaymentProfile($customerId, $params)
     {
         $sendParams = $this->verifyParams($params, $this->paymentParams);
@@ -160,6 +182,13 @@ class StripePaymentProvider implements PaymentProcessorInterface
         return (object)$card;
     }
 
+    /**
+     * Find a customer payment profile
+     *
+     * @param  string $customerId
+     * @param  string $paymentId
+     * @return mixed
+     */
     public function findPaymentProfile($customerId, $paymentId)
     {
         $card = $this->stripe->cards()->find($customerId, $paymentId);
@@ -167,6 +196,14 @@ class StripePaymentProvider implements PaymentProcessorInterface
         return (object)$card;
     }
 
+    /**
+     * Update a customer payment profile
+     *
+     * @param  string $customerId
+     * @param  string $paymentId
+     * @param  array $params
+     * @return mixed
+     */
     public function updatePaymentProfile($customerId, $paymentId, $params)
     {
         $sendParams = $this->verifyParams($params, $this->paymentParams);
@@ -175,6 +212,13 @@ class StripePaymentProvider implements PaymentProcessorInterface
         return (object)$card;
     }
 
+    /**
+     * Delete a customer payment profile
+     *
+     * @param  string $customerId
+     * @param  string $paymentId
+     * @return boolean
+     */
     public function deletePaymentProfile($customerId, $paymentId)
     {
         $response = $this->stripe->cards()->delete($customerId, $paymentId);

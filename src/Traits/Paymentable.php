@@ -19,6 +19,12 @@ trait Paymentable
         return PaymentProcessor::getPaymentIdColumn();
     }
 
+    /**
+     * Get the payment profile identifier value accessor
+     *
+     * @param  null $value
+     * @return string
+     */
     public function getPaymentProfileIdAttribute($value)
     {
         $col = $this->getPaymentProfileIdColumn();
@@ -26,6 +32,12 @@ trait Paymentable
         return $this->$col;
     }
 
+    /**
+     * Create a payment profile with payment processor
+     *
+     * @param  array $params
+     * @return void
+     */
     public function createPaymentProfile($params)
     {
         $payment = PaymentProcessor::createPaymentProfile(
@@ -43,6 +55,11 @@ trait Paymentable
         $this->verifyFilledAttributes();
     }
 
+    /**
+     * Retrieve payment profile details from payment processor
+     *
+     * @return mixed
+     */
     public function getFull()
     {
         $payment = PaymentProcessor::findPaymentProfile(
@@ -53,6 +70,12 @@ trait Paymentable
         return $payment;
     }
 
+    /**
+     * Update payment profile with payment processor
+     *
+     * @param  array $params
+     * @return mixed
+     */
     public function updatePaymentProfile($params)
     {
         $payment = PaymentProcessor::updatePaymentProfile(
@@ -68,6 +91,11 @@ trait Paymentable
         $this->verifyFilledAttributes();
     }
 
+    /**
+     * Delete payment profile at payment processor
+     *
+     * @return boolean
+     */
     public function deletePaymentProfile()
     {
         $deleted = PaymentProcessor::deletePaymentProfile(
@@ -78,6 +106,13 @@ trait Paymentable
         return $deleted;
     }
 
+    /**
+     * Ensure model attributes match only fillable table columns at save and
+     * virtual attributes are stripped after successful create/update payment
+     * profile call
+     *
+     * @return void 
+     */
     public function verifyFilledAttributes()
     {
         // get fillable from hard table columns

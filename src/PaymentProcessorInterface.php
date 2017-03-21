@@ -12,11 +12,25 @@ interface PaymentProcessorInterface
     public function getCustomerProfileKey();
 
     /**
-     * The column name to store/retrieve customer profile ids
+     * The table column name to store/retrieve customer profile ids
      *
      * @return string
      */
     public function getCustomerIdColumn();
+
+    /**
+     * The payment profile indentifier passed in response objects
+     *
+     * @return string
+     */
+    public function getPaymentProfileKey();
+
+    /**
+     * The table column name to store/retrieve payment profile ids
+     *
+     * @return string
+     */
+    public function getPaymentIdColumn();
 
     /**
      * Create customer profile from params
@@ -51,10 +65,6 @@ interface PaymentProcessorInterface
      */
     public function deleteCustomerProfile($id);
 
-    public function getPaymentProfileKey();
-
-    public function getPaymentIdColumn();
-
     /**
      * Create customer payment profile from params
      *
@@ -64,9 +74,31 @@ interface PaymentProcessorInterface
      */
     public function createPaymentProfile($customerId, $params);
 
+    /**
+     * Find a customer payment profile
+     *
+     * @param  string $customerId
+     * @param  string $paymentId
+     * @return mixed
+     */
     public function findPaymentProfile($customerId, $paymentId);
 
+    /**
+     * Update a customer payment profile
+     *
+     * @param  string $customerId
+     * @param  string $paymentId
+     * @param  array $params
+     * @return mixed
+     */
     public function updatePaymentProfile($customerId, $paymentId, $params);
 
+    /**
+     * Delete a customer payment profile
+     *
+     * @param  string $customerId
+     * @param  string $paymentId
+     * @return boolean
+     */
     public function deletePaymentProfile($customerId, $paymentId);
 }
