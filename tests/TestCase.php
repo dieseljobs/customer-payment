@@ -67,14 +67,16 @@ class TestCase extends BaseTestCase
      */
     protected function runTestMigrations()
     {
-        if (! $this->schema->hasTable('slack_log')) {
+        if (! $this->schema->hasTable('users')) {
             $this->schema->create('users', function ($table) {
                 $table->increments('id');
                 $table->string('email');
                 $table->string('name');
                 $table->string('stripe_id')->nullable();
             });
+        }
 
+        if (! $this->schema->hasTable('payment_profiles')) {
             $this->schema->create('payment_profiles', function ($table) {
                 $table->increments('id');
                 $table->integer('user_id');
@@ -82,6 +84,17 @@ class TestCase extends BaseTestCase
                 $table->string('card_brand')->nullable();
                 $table->string('card_last_four')->nullable();
                 //$table->timestamps();
+            });
+        }
+
+        if (! $this->schema->hasTable('custom_users')) {
+            $this->schema->create('custom_users', function ($table) {
+                $table->increments('id');
+                $table->string('email');
+                $table->string('fname');
+                $table->string('lname');
+                $table->string('company');
+                $table->string('stripe_acct')->nullable();
             });
         }
     }

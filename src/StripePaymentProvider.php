@@ -29,8 +29,12 @@ class StripePaymentProvider implements PaymentProcessorInterface
     private $customerParams = [
         'account_balance',
         'coupon',
+        'description',
         'email',
         'metadata',
+        'plan',
+        'quantity',
+        'trial_end',
         'source'
     ];
 
