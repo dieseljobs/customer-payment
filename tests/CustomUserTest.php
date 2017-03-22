@@ -9,7 +9,7 @@ class CustomUserTest extends TestCase
 {
 
     public $stripe_acct = "cus_AKqPLr4lGP5Xkc";
-    public $stripe_card_acct = "card_1A0FjAJfQv1xXyoLtAMZpYdB";
+    public $stripe_card_acct = "card_1A0GbVJfQv1xXyoLWLC0TOHn";
 
     public function setUp()
     {
@@ -146,6 +146,30 @@ class CustomUserTest extends TestCase
         $paymentProfile = new PaymentProfile(['stripe_card_acct' => $this->stripe_card_acct]);
         $user->payment_profiles()->save($paymentProfile);
         $this->assertTrue($paymentProfile->delete());
+    }
+
+    public function testCustomUserCanChargePaymentProfile()
+    {
+        $user = User::create([
+            'email' => 'aaronmichaelmusic@gmail.com',
+            'fname' => 'Aaron',
+            'lname' => 'Kaz',
+            'company' => 'dieseljobs.com',
+            'stripe_acct' => $this->stripe_acct
+        ]);
+        $paymentProfile = new PaymentProfile(['stripe_card_acct' => $this->stripe_card_acct]);
+        $user->payment_profiles()->save($paymentProfile);
+
+        $attrs = [
+            'amount' => 10.50,
+            'description' => 'Test charge',
+            'statement_descriptor' => 'Report Fee',
+            'metadata' => [
+                'invoice_id' => "111"
+            ]
+        ];
+        $charge = $paymentProfile->charge($attrs);
+        $this->assertEquals(true, !empty($charge->id));
     }
 
 }

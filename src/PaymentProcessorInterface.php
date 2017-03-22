@@ -101,4 +101,6 @@ interface PaymentProcessorInterface
      * @return boolean
      */
     public function deletePaymentProfile($customerId, $paymentId);
+
+    public function chargePaymentProfile($customerId, $paymentId, $params);
 }

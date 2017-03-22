@@ -58,6 +58,25 @@ class StripePaymentProvider implements PaymentProcessorInterface
     ];
 
     /**
+     * Permissible charge parameters
+     *
+     * @var array
+     */
+    private $chargeParams = [
+        'amount',
+        'currency',
+        'customer',
+        'source',
+        'description',
+        'metadata',
+        'capture',
+        'statement_descriptor',
+        'receipt_email',
+        'application_fee',
+        'shipping'
+    ];
+
+    /**
      * Setup new instance with configuration values
      *
      * @param array $config
@@ -228,6 +247,23 @@ class StripePaymentProvider implements PaymentProcessorInterface
         $response = $this->stripe->cards()->delete($customerId, $paymentId);
 
         return (isset($response['deleted']) and $response['deleted']);
+    }
+
+    public function chargePaymentProfile($customerId, $paymentId, $params)
+    {
+        $sendParams = $this->verifyParams($params, $this->chargeParams);
+        // check currency
+        if (! isset($sendParams['currency'])) $sendParams['currency'] = 'USD';
+        // merge defaults
+        $sendParams = array_merge($sendParams, [
+            'capture' => true,
+            'customer' => $customerId,
+            'card' => $paymentId
+        ]);
+
+        $charge = $this->stripe->charges()->create($sendParams);
+
+        return (object)$charge;
     }
 
     /**

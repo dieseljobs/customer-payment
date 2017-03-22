@@ -4,10 +4,11 @@ namespace TheLHC\CustomerPayment;
 
 use Illuminate\Database\Eloquent\Model;
 use TheLHC\CustomerPayment\Traits\Paymentable;
+use TheLHC\CustomerPayment\Traits\Chargeable;
 
 class PaymentModelProvider extends Model
 {
-    use Paymentable;
+    use Paymentable, Chargeable;
 
     protected static function boot()
     {
@@ -76,6 +77,7 @@ class PaymentModelProvider extends Model
     public function user()
     {
         $userClass = config()->get('customer_payment.model');
+
         return $this->belongsTo($userClass, 'user_id');
     }
 

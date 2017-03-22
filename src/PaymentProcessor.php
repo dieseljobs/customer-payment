@@ -158,4 +158,10 @@ class PaymentProcessor implements PaymentProcessorInterface
     {
         return $this->provider->deletePaymentProfile($customerId, $paymentId);
     }
+
+    public function chargePaymentProfile($customerId, $paymentId, $params)
+    {
+        return $this->provider->chargePaymentProfile($customerId, $paymentId, $params);
+    }
+    
 }
