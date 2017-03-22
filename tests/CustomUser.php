@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 class CustomUser extends Eloquent
 {
     use \TheLHC\CustomerPayment\Traits\Profileable;
-    //use \TheLHC\CustomerPayment\Traits\HasManyPayments;
+    use \TheLHC\CustomerPayment\Traits\HasManyPayments;
 
     public $timestamps = false;
 

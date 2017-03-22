@@ -33,17 +33,30 @@ trait Paymentable
     }
 
     /**
+     * Resolve default params to send to create/update payment profile
+     * request
+     *
+     * @return array
+     */
+    public function paymentProfileParams()
+    {
+        return $this->toArray();
+    }
+
+    /**
      * Create a payment profile with payment processor
      *
      * @param  array $params
      * @return void
      */
-    public function createPaymentProfile($params)
+    public function createPaymentProfile()
     {
+        $params = $this->paymentProfileParams();
         $payment = PaymentProcessor::createPaymentProfile(
             $this->customer_profile_id,
             $params
         );
+
         $paymentKey = PaymentProcessor::getPaymentProfileKey();
         $col = $this->getPaymentProfileIdColumn();
         $this->$col = $payment->$paymentKey;
@@ -76,8 +89,9 @@ trait Paymentable
      * @param  array $params
      * @return mixed
      */
-    public function updatePaymentProfile($params)
+    public function updatePaymentProfile()
     {
+        $params = $this->paymentProfileParams();
         $payment = PaymentProcessor::updatePaymentProfile(
             $this->customer_profile_id,
             $this->payment_profile_id,
@@ -111,26 +125,28 @@ trait Paymentable
      * virtual attributes are stripped after successful create/update payment
      * profile call
      *
-     * @return void 
+     * @return void
      */
     public function verifyFilledAttributes()
     {
-        // get fillable from hard table columns
-        $schema = app('db')->connection()->getSchemaBuilder();
-        $tableCols = $schema->getColumnListing($this->table);
-        $fillable = $tableCols;
-        if (in_array('id', $fillable)) {
-            unset($fillable[array_search('id', $fillable)]);
+        if (empty($this->getFillable())) {
+            // get fillable from hard table columns
+            $schema = app('db')->connection()->getSchemaBuilder();
+            $fillable = $schema->getColumnListing($this->table);
+            if (in_array('id', $fillable)) {
+                unset($fillable[array_search('id', $fillable)]);
+            }
+            $this->fillable($fillable);
         }
 
         // cross-examine fillable attributes with currently set attributes
         $keep = array_intersect_key(
             $this->getAttributes(),
-            array_flip($fillable)
+            array_flip($this->getFillable())
         );
 
         // force set valid attributes
-        $this->attributes = $keep;
+        $this->setRawAttributes($keep);
     }
 
 }

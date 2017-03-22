@@ -81,9 +81,6 @@ class TestCase extends BaseTestCase
                 $table->increments('id');
                 $table->integer('user_id');
                 $table->string('stripe_card_id')->nullable();
-                $table->string('card_brand')->nullable();
-                $table->string('card_last_four')->nullable();
-                //$table->timestamps();
             });
         }
 
@@ -95,6 +92,16 @@ class TestCase extends BaseTestCase
                 $table->string('lname');
                 $table->string('company');
                 $table->string('stripe_acct')->nullable();
+            });
+        }
+
+        if (! $this->schema->hasTable('custom_payment_profiles')) {
+            $this->schema->create('custom_payment_profiles', function ($table) {
+                $table->increments('id');
+                $table->integer('user_id');
+                $table->string('stripe_card_acct')->nullable();
+                $table->string('card_brand')->nullable();
+                $table->string('card_last_four')->nullable();
             });
         }
     }
