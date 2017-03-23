@@ -102,5 +102,21 @@ interface PaymentProcessorInterface
      */
     public function deletePaymentProfile($customerId, $paymentId);
 
+    /**
+     * Retrieve all customer payment profiles from processor
+     *
+     * @param  string $customerId
+     * @return Illuminate\Support\Collection
+     */
+    public function getPaymentProfiles($customerId);
+
+    /**
+     * Charge customer payment profile
+     *
+     * @param  string $customerId
+     * @param  string $paymentId
+     * @param  array $params
+     * @return mixed
+     */
     public function chargePaymentProfile($customerId, $paymentId, $params);
 }

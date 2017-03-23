@@ -148,6 +148,37 @@ class CustomUserTest extends TestCase
         $this->assertTrue($paymentProfile->delete());
     }
 
+    public function testCustomUserCanRetrieveAllPaymentProfiles()
+    {
+        $user = User::create([
+            'email' => 'aaronmichaelmusic@gmail.com',
+            'fname' => 'Aaron',
+            'lname' => 'Kaz',
+            'company' => 'dieseljobs.com',
+            'stripe_acct' => $this->stripe_acct
+        ]);
+        $paymentProfile = new PaymentProfile(['stripe_card_acct' => $this->stripe_card_acct]);
+        $user->payment_profiles()->save($paymentProfile);
+        $payments = $user->getPaymentProfiles();
+        $this->assertTrue(is_a($payments, 'Illuminate\Support\Collection'));
+    }
+
+    public function testCustomUserCanRetrieveFullPaymentProfiles()
+    {
+        $user = User::create([
+            'email' => 'aaronmichaelmusic@gmail.com',
+            'fname' => 'Aaron',
+            'lname' => 'Kaz',
+            'company' => 'dieseljobs.com',
+            'stripe_acct' => $this->stripe_acct
+        ]);
+        $paymentProfile = new PaymentProfile(['stripe_card_acct' => $this->stripe_card_acct]);
+        $user->payment_profiles()->save($paymentProfile);
+        $payments = $user->full_payment_profiles();
+        dd($payments);
+        //$this->assertTrue(is_a($payments, 'Illuminate\Support\Collection'));
+    }
+
     public function testCustomUserCanChargePaymentProfile()
     {
         $user = User::create([

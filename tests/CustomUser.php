@@ -21,6 +21,11 @@ class CustomUser extends Eloquent
         'stripe_acct'
     ];
 
+    public function payment_profiles()
+    {
+        return $this->hasMany('TheLHC\CustomerPayment\Tests\CustomPaymentProfile', 'user_id');
+    }
+
     /**
      * Resolve default user params to send to create/update customer profile
      * request

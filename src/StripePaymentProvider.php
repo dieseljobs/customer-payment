@@ -249,6 +249,28 @@ class StripePaymentProvider implements PaymentProcessorInterface
         return (isset($response['deleted']) and $response['deleted']);
     }
 
+    /**
+     * Retrieve all customer payment profiles from processor
+     *
+     * @param  string $customerId
+     * @return Illuminate\Support\Collection
+     */
+    public function getPaymentProfiles($customerId)
+    {
+        $cards = $this->stripe->cards()->all($customerId);
+        $cards = collect($cards['data']);
+
+        return $cards;
+    }
+
+    /**
+     * Charge customer payment profile
+     *
+     * @param  string $customerId
+     * @param  string $paymentId
+     * @param  array $params
+     * @return mixed
+     */
     public function chargePaymentProfile($customerId, $paymentId, $params)
     {
         $sendParams = $this->verifyParams($params, $this->chargeParams);
