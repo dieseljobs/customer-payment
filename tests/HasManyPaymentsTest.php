@@ -2,7 +2,7 @@
 
 use TheLHC\CustomerPayment\Tests\TestCase;
 use TheLHC\CustomerPayment\Tests\User;
-use TheLHC\CustomerPayment\Models\PaymentProfile;
+use TheLHC\CustomerPayment\PaymentProfile;
 
 class HasManyPaymentsTest extends TestCase
 {

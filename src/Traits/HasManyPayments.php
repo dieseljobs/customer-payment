@@ -12,7 +12,7 @@ trait HasManyPayments
      */
     public function payment_profiles()
     {
-        return $this->hasMany('TheLHC\CustomerPayment\Models\PaymentProfile', 'user_id');
+        return $this->hasMany('TheLHC\CustomerPayment\PaymentProfile', 'user_id');
     }
 
     /**

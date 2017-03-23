@@ -30,6 +30,12 @@ return [
             'api_secret' => env('STRIPE_SECRET', ''),
         ],
 
+        'authorize' => [
+            'api_uri' => env('AUTHORIZENET_ENDPOINT', ''),
+            'api_name' => env('AUTHORIZENET_API_NAME', ''),
+            'api_key' => env('AUTHORIZENET_API_KEY', '')
+        ]
+
     ],
 
     /*

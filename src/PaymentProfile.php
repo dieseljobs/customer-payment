@@ -1,6 +1,6 @@
 <?php
 
-namespace TheLHC\CustomerPayment\Models;
+namespace TheLHC\CustomerPayment;
 
 use TheLHC\CustomerPayment\PaymentModelProvider;
 
