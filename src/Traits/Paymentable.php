@@ -51,6 +51,15 @@ trait Paymentable
      */
     public function createPaymentProfile()
     {
+        // create customer profile if not setup
+        if (! $this->customer_profile_id) {
+            if (method_exists($this, "createCustomerProfile")) {
+                $this->createCustomerProfile();
+            } else {
+                $this->user->createCustomerProfile();
+            }
+        }
+
         $params = $this->paymentProfileParams();
         $payment = PaymentProcessor::createPaymentProfile(
             $this->customer_profile_id,

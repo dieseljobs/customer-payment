@@ -17,6 +17,7 @@ class CustomerPaymentServiceProvider extends ServiceProvider
             __DIR__ . '/../config/customer_payment.php' => config_path('customer_payment.php')
         ], 'config');
     }
+    
     /**
      * Register any package services.
      *

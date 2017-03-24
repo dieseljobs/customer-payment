@@ -95,6 +95,25 @@ class CustomUserTest extends TestCase
         $this->assertEquals(true, !empty($paymentProfile->stripe_card_acct));
     }
 
+    public function testCustomUserCanCreatePaymentProfileWithoutCustomerProfile()
+    {
+        $user = User::create([
+            'email' => 'aaronmichaelmusic@gmail.com',
+            'fname' => 'Aaron',
+            'lname' => 'Kaz',
+            'company' => 'dieseljobs.com'
+        ]);
+        $attrs = [
+            'number'    => '4242424242424242',
+            'exp_month' => 10,
+            'cvc'       => 314,
+            'exp_year'  => 2020,
+        ];
+        $paymentProfile = new PaymentProfile($attrs);
+        $user->payment_profiles()->save($paymentProfile);
+        $this->assertEquals(true, !empty($paymentProfile->stripe_card_acct));
+    }
+
     public function testCustomUserCanFindPaymentProfile()
     {
         $user = User::create([

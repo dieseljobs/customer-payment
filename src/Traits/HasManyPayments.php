@@ -53,4 +53,5 @@ trait HasManyPayments
 
         return $model_payments;
     }
+
 }
