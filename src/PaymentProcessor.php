@@ -183,4 +183,51 @@ class PaymentProcessor implements PaymentProcessorInterface
         return $this->provider->chargePaymentProfile($customerId, $paymentId, $params);
     }
 
+    /**
+     * Create a charge
+     *
+     * @param  array $params
+     * @return mixed
+     */
+    public function createCharge($params)
+    {
+        return $this->provider->createCharge($params);
+    }
+
+    /**
+     * Retrieve a charge
+     *
+     * @param  string $chargeId
+     * @return mixed
+     */
+    public function findCharge($chargeId)
+    {
+        return $this->provider->findCharge($chargeId);
+    }
+
+    /**
+     * Update a charge
+     *
+     * @param  string $chargeId
+     * @param  array $params
+     * @return mixed
+     */
+    public function updateCharge($chargeId, $params)
+    {
+        return $this->provider->updateCharge($chargeId, $params);
+    }
+
+    /**
+     * Capture a charge
+     *
+     * @param  string $chargeId
+     * @param  integer $amount
+     * @param  array $params
+     * @return mixed
+     */
+    public function captureCharge($chargeId, $amount = null, array $params = [])
+    {
+        return $this->provider->captureCharge($chargeId, $amount, $params);
+    }
+
 }

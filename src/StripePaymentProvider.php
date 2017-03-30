@@ -289,6 +289,66 @@ class StripePaymentProvider implements PaymentProcessorInterface
     }
 
     /**
+     * Create a charge
+     *
+     * @param  array $params
+     * @return mixed
+     */
+    public function createCharge($params)
+    {
+        $sendParams = $this->verifyParams($params, $this->chargeParams);
+        // check currency
+        if (! isset($sendParams['currency'])) $sendParams['currency'] = 'usd';
+
+        $charge = $this->stripe->charges()->create($sendParams);
+
+        return (object)$charge;
+    }
+
+    /**
+     * Retrieve a charge
+     *
+     * @param  string $chargeId
+     * @return mixed
+     */
+    public function findCharge($chargeId)
+    {
+        $charge = $this->stripe->charges()->find($chargeId);
+
+        return (object)$charge;
+    }
+
+    /**
+     * Update a charge
+     *
+     * @param  string $chargeId
+     * @param  array $params
+     * @return mixed
+     */
+    public function updateCharge($chargeId, $params)
+    {
+        $sendParams = $this->verifyParams($params, $this->chargeParams);
+        $charge = $this->stripe->charges()->update($chargeId, $sendParams);
+
+        return (object)$charge;
+    }
+
+    /**
+     * Capture a charge
+     *
+     * @param  string $chargeId
+     * @return mixed
+     */
+    public function captureCharge($chargeId, $amount = null, array $params = [])
+    {
+        $sendParams = $this->verifyParams($params, $this->chargeParams);
+        $charge = $this->stripe->charges()->capture($chargeId, $amount, $sendParams);
+
+        return (object)$charge;
+        //return (isset($response['deleted']) and $response['deleted']);
+    }
+
+    /**
      * Verify and normalize incoming parameters
      *
      * @param  array $params

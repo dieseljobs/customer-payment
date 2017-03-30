@@ -119,4 +119,37 @@ interface PaymentProcessorInterface
      * @return mixed
      */
     public function chargePaymentProfile($customerId, $paymentId, $params);
+
+    /**
+     * Create a charge
+     *
+     * @param  array $params
+     * @return mixed
+     */
+    public function createCharge($params);
+
+    /**
+     * Retrieve a charge
+     *
+     * @param  string $chargeId
+     * @return mixed
+     */
+    public function findCharge($chargeId);
+
+    /**
+     * Update a charge
+     *
+     * @param  string $chargeId
+     * @param  array $params
+     * @return mixed
+     */
+    public function updateCharge($chargeId, $params);
+
+    /**
+     * Capture a charge
+     *
+     * @param  string $chargeId
+     * @return mixed
+     */
+    public function captureCharge($chargeId, $amount = null, array $params = []);
 }
