@@ -1,6 +1,7 @@
 <?php
 
 namespace TheLHC\CustomerPayment\Traits;
+
 use TheLHC\CustomerPayment\Facades\PaymentProcessor;
 
 trait Paymentable
@@ -36,11 +37,18 @@ trait Paymentable
      * Resolve default params to send to create/update payment profile
      * request
      *
+     * @param  array $params
      * @return array
      */
-    public function paymentProfileParams()
+    public function paymentProfileParams($params = null)
     {
-        return $this->toArray();
+        // if params are passed to the method, just pass through and
+        // reserve special logic for overloaded methods
+        if ($params) {
+            return $params;
+        } else {
+            return $this->toArray();
+        }
     }
 
     /**
@@ -49,7 +57,7 @@ trait Paymentable
      * @param  array $params
      * @return void
      */
-    public function createPaymentProfile()
+    public function createPaymentProfile($params = null)
     {
         // create customer profile if not setup
         if (! $this->customer_profile_id) {
@@ -60,7 +68,7 @@ trait Paymentable
             }
         }
 
-        $params = $this->paymentProfileParams();
+        $params = $this->paymentProfileParams($params);
         $payment = PaymentProcessor::createPaymentProfile(
             $this->customer_profile_id,
             $params
@@ -68,7 +76,7 @@ trait Paymentable
 
         $paymentKey = PaymentProcessor::getPaymentProfileKey();
         $col = $this->getPaymentProfileIdColumn();
-        $this->$col = $payment->$paymentKey;
+        $this->setAttribute($col, $payment->$paymentKey);
 
         if (method_exists($this, 'setPaymentColumns')) {
             $this->setPaymentColumns($payment);
@@ -98,9 +106,9 @@ trait Paymentable
      * @param  array $params
      * @return mixed
      */
-    public function updatePaymentProfile()
+    public function updatePaymentProfile($params = null)
     {
-        $params = $this->paymentProfileParams();
+        $params = $this->paymentProfileParams($params);
         $payment = PaymentProcessor::updatePaymentProfile(
             $this->customer_profile_id,
             $this->payment_profile_id,

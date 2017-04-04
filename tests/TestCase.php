@@ -104,6 +104,16 @@ class TestCase extends BaseTestCase
                 $table->string('card_last_four')->nullable();
             });
         }
+
+        if (! $this->schema->hasTable('custom_users_two')) {
+            $this->schema->create('custom_users_two', function ($table) {
+                $table->increments('id');
+                $table->string('email');
+                $table->string('name');
+                $table->string('stripe_id')->nullable();
+                $table->string('stripe_card_id')->nullable();
+            });
+        }
     }
 
     /**
