@@ -144,26 +144,29 @@ trait Paymentable
      *
      * @return void
      */
-    public function verifyFilledAttributes()
-    {
-        if (empty($this->getFillable())) {
-            // get fillable from hard table columns
-            $schema = app('db')->connection()->getSchemaBuilder();
-            $fillable = $schema->getColumnListing($this->table);
-            if (in_array('id', $fillable)) {
-                unset($fillable[array_search('id', $fillable)]);
-            }
-            $this->fillable($fillable);
-        }
+     public function verifyFilledAttributes()
+     {
+         if (empty($this->getFillable())) {
+             // get fillable from hard table columns
+             $schema = app('db')->connection()->getSchemaBuilder();
+             $fillable = $schema->getColumnListing($this->table);
+             if (in_array('id', $fillable)) {
+                 unset($fillable[array_search('id', $fillable)]);
+             }
+             $this->fillable($fillable);
+         }
 
-        // cross-examine fillable attributes with currently set attributes
-        $keep = array_intersect_key(
-            $this->getAttributes(),
-            array_flip($this->getFillable())
-        );
+         // make sure we don't pull out id
+         $fillable = array_merge($this->getFillable(), ['id']);
 
-        // force set valid attributes
-        $this->setRawAttributes($keep);
-    }
+         // cross-examine fillable attributes with currently set attributes
+         $keep = array_intersect_key(
+             $this->getAttributes(),
+             array_flip($fillable)
+         );
+
+         // force set valid attributes
+         $this->setRawAttributes($keep);
+     }
 
 }
