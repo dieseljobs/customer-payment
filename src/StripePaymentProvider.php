@@ -44,15 +44,16 @@ class StripePaymentProvider implements PaymentProcessorInterface
      * @var array
      */
     private $paymentParams = [
-        'number',
-        'exp_month',
-        'exp_year',
-        'cvc',
+        'number', //required
+        'exp_month', //required
+        'exp_year', //required
+        'cvc', //required
         'address_city',
         'address_line1',
         'address_line2',
         'address_state',
         'address_zip',
+        'address_country',
         'name',
         'metadata'
     ];
