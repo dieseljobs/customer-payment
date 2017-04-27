@@ -22,7 +22,8 @@ class PaymentModelProvider extends Model
          */
         static::creating(function ($model) {
             if (empty($model->payment_profile_id)) {
-                $model->createPaymentProfile();
+                $createPaymentProfile = $model->createPaymentProfile();
+                if ( !$createPaymentProfile) return false;
             }
         });
 
@@ -34,7 +35,8 @@ class PaymentModelProvider extends Model
          */
         static::updating(function ($model) {
             if (!empty($model->payment_profile_id)) {
-                $model->updatePaymentProfile();
+                $updatePaymentProfile = $model->updatePaymentProfile();
+                if ( !$updatePaymentProfile) return false;
             }
         });
 

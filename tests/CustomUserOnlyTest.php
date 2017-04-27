@@ -26,7 +26,6 @@ class CustomUserOnlyTest extends TestCase
         ]);
 
         $user->createCustomerProfile();
-        //dd($user);
         $this->assertEquals(true, !empty($user->stripe_acct));
     }
 
@@ -65,6 +64,23 @@ class CustomUserOnlyTest extends TestCase
         $this->assertEquals(true, empty($user->stripe_acct));
     }
 
+    public function testCustomUserNoRelationCanCatchCreatePaymentProfileErrors()
+    {
+        $user = User::create([
+            'email' => 'aaronmichaelmusic@gmail.com',
+            'name' => 'Aaron Kaz @ diesel',
+            'stripe_id' => $this->stripe_id
+        ]);
+        $attrs = [
+            'number'    => '4242424',
+            'exp_month' => 10,
+            'cvc'       => 314,
+            'exp_year'  => 2020,
+        ];
+        $this->assertEquals(false, $user->storePayment($attrs));
+        $this->assertEquals(true, is_array($user->getPaymentProfileErrors()));
+    }
+
     public function testCustomUserNoRelationCanCreatePaymentProfile()
     {
         $user = User::create([
@@ -79,7 +95,6 @@ class CustomUserOnlyTest extends TestCase
             'exp_year'  => 2020,
         ];
         $user->storePayment($attrs);
-        //dd($user);
         $this->assertEquals(true, !empty($user->stripe_card_id));
     }
 

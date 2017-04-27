@@ -7,6 +7,13 @@ use TheLHC\CustomerPayment\Facades\PaymentProcessor;
 trait Paymentable
 {
     /**
+     * Errors from ErrorBag if returned
+     *
+     * @return array
+     */
+    protected $paymentProfileErrors;
+
+    /**
      * Get the column name where customer profile identifier is stored
      *
      * @return string
@@ -74,6 +81,12 @@ trait Paymentable
             $params
         );
 
+        // catch errors
+        if (get_class($payment) === "TheLHC\CustomerPayment\ErrorBag") {
+            $this->paymentProfileErrors = $payment->getErrors();
+            return false;
+        }
+
         $paymentKey = PaymentProcessor::getPaymentProfileKey();
         $col = $this->getPaymentProfileIdColumn();
         $this->setAttribute($col, $payment->$paymentKey);
@@ -83,6 +96,8 @@ trait Paymentable
         }
 
         $this->verifyFilledAttributes();
+
+        return true;
     }
 
     /**
@@ -115,6 +130,12 @@ trait Paymentable
             $params
         );
 
+        // catch errors
+        if (get_class($payment) === "TheLHC\CustomerPayment\ErrorBag") {
+            $this->paymentProfileErrors = $payment->getErrors();
+            return false;
+        }
+
         if (method_exists($this, 'setPaymentColumns')) {
             $this->setPaymentColumns($payment);
         }
@@ -133,6 +154,12 @@ trait Paymentable
             $this->customer_profile_id,
             $this->payment_profile_id
         );
+
+        // catch errors
+        if (get_class($deleted) === "TheLHC\CustomerPayment\ErrorBag") {
+            $this->paymentProfileErrors = $deleted->getErrors();
+            return false;
+        }
 
         return $deleted;
     }
@@ -167,6 +194,16 @@ trait Paymentable
 
          // force set valid attributes
          $this->setRawAttributes($keep);
+     }
+
+     /**
+      * Get errors returned from payment processor call exception
+      *
+      * @return array
+      */
+     public function getPaymentProfileErrors()
+     {
+         return $this->paymentProfileErrors;
      }
 
 }

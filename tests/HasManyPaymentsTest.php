@@ -7,8 +7,27 @@ use TheLHC\CustomerPayment\PaymentProfile;
 class HasManyPaymentsTest extends TestCase
 {
 
-    public $stripe_id = "cus_AKAtaFldeKfE7x";
-    public $stripe_card_id = "card_19zs9cJfQv1xXyoLgBc2FlQg";
+    public $stripe_id = "cus_AQuKtXQyM6Byyh";
+    public $stripe_card_id = "card_1A62VZJfQv1xXyoLW0XKVnp2";
+
+    public function testCanCatchCreatePaymentProfileErrors()
+    {
+        $user = User::create([
+            'email' => 'aaronmichaelmusic@gmail.com',
+            'name' => 'Aaron kaz',
+            'stripe_id' => $this->stripe_id
+        ]);
+        $attrs = [
+            'number'    => '4242424',
+            'exp_month' => 10,
+            'cvc'       => 314,
+            'exp_year'  => 2020,
+        ];
+        $paymentProfile = new PaymentProfile($attrs);
+
+        $this->assertEquals(false, $user->payment_profiles()->save($paymentProfile));
+        $this->assertEquals(true, is_array($paymentProfile->getPaymentProfileErrors()));
+    }
 
     public function testCanCreatePaymentProfile()
     {
@@ -41,6 +60,24 @@ class HasManyPaymentsTest extends TestCase
         $this->assertEquals($paymentProfile->stripe_card_id, $fullPayment->id);
     }
 
+    public function testCanCatchUpdatePaymentProfileErrors()
+    {
+        $user = User::create([
+            'email' => 'aaronmichaelmusic@gmail.com',
+            'name' => 'Aaron kaz',
+            'stripe_id' => $this->stripe_id
+        ]);
+        $paymentProfile = new PaymentProfile(['stripe_card_id' => 'wrong']);
+        $user->payment_profiles()->save($paymentProfile);
+
+        $attrs = [
+            'foo' => 'bar'
+        ];
+
+        $this->assertEquals(false, $paymentProfile->update($attrs));
+        $this->assertEquals(true, is_array($paymentProfile->getPaymentProfileErrors()));
+    }
+
     public function testCanUpdatePaymentProfile()
     {
         $user = User::create([
@@ -61,6 +98,18 @@ class HasManyPaymentsTest extends TestCase
             ]
         ];
         $this->assertTrue($paymentProfile->update($attrs));
+    }
+
+    public function testItCatchesDeletePaymentProfileErrors()
+    {
+        $user = User::create([
+            'email' => 'aaronmichaelmusic@gmail.com',
+            'name' => 'Aaron kaz',
+            'stripe_id' => $this->stripe_id
+        ]);
+        $paymentProfile = new PaymentProfile(['stripe_card_id' => 'foobar']);
+        $this->assertEquals(false, $user->payment_profiles()->save($paymentProfile));
+        $this->assertEquals(true, is_array($paymentProfile->getPaymentProfileErrors()));
     }
 
     public function testItCanDeletePaymentProfile()

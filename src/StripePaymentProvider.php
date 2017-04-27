@@ -201,9 +201,15 @@ class StripePaymentProvider implements PaymentProcessorInterface
     public function createPaymentProfile($customerId, $params)
     {
         $sendParams = $this->verifyParams($params, $this->paymentParams);
-        $card = $this->stripe->cards()->create($customerId, $sendParams);
+        try {
+            $card = $this->stripe->cards()->create($customerId, $sendParams);
 
-        return (object)$card;
+            return (object)$card;
+        } catch (\Exception $e) {
+            $errorBag = new ErrorBag(['payment_profile' => $e->getMessage()]);
+
+            return $errorBag;
+        }
     }
 
     /**
@@ -231,9 +237,15 @@ class StripePaymentProvider implements PaymentProcessorInterface
     public function updatePaymentProfile($customerId, $paymentId, $params)
     {
         $sendParams = $this->verifyParams($params, $this->paymentParams);
-        $card = $this->stripe->cards()->update($customerId, $paymentId, $sendParams);
+        try {
+            $card = $this->stripe->cards()->update($customerId, $paymentId, $sendParams);
 
-        return (object)$card;
+            return (object)$card;
+        } catch (\Exception $e) {
+            $errorBag = new ErrorBag(['payment_profile' => $e->getMessage()]);
+
+            return $errorBag;
+        }
     }
 
     /**
@@ -245,9 +257,15 @@ class StripePaymentProvider implements PaymentProcessorInterface
      */
     public function deletePaymentProfile($customerId, $paymentId)
     {
-        $response = $this->stripe->cards()->delete($customerId, $paymentId);
+        try {
+            $response = $this->stripe->cards()->delete($customerId, $paymentId);
 
-        return (isset($response['deleted']) and $response['deleted']);
+            return (isset($response['deleted']) and $response['deleted']);
+        } catch (\Exception $e) {
+            $errorBag = new ErrorBag(['payment_profile' => $e->getMessage()]);
+
+            return $errorBag;
+        }
     }
 
     /**
