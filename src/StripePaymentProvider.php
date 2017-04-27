@@ -206,7 +206,7 @@ class StripePaymentProvider implements PaymentProcessorInterface
 
             return (object)$card;
         } catch (\Exception $e) {
-            $errorBag = new ErrorBag(['payment_profile' => $e->getMessage()]);
+            $errorBag = new ErrorBag(['create_payment_profile' => $e->getMessage()]);
 
             return $errorBag;
         }
@@ -242,7 +242,7 @@ class StripePaymentProvider implements PaymentProcessorInterface
 
             return (object)$card;
         } catch (\Exception $e) {
-            $errorBag = new ErrorBag(['payment_profile' => $e->getMessage()]);
+            $errorBag = new ErrorBag(['update_payment_profile' => $e->getMessage()]);
 
             return $errorBag;
         }
@@ -262,7 +262,7 @@ class StripePaymentProvider implements PaymentProcessorInterface
 
             return (isset($response['deleted']) and $response['deleted']);
         } catch (\Exception $e) {
-            $errorBag = new ErrorBag(['payment_profile' => $e->getMessage()]);
+            $errorBag = new ErrorBag(['delete_payment_profile' => $e->getMessage()]);
 
             return $errorBag;
         }
@@ -302,9 +302,15 @@ class StripePaymentProvider implements PaymentProcessorInterface
             'card' => $paymentId
         ]);
 
-        $charge = $this->stripe->charges()->create($sendParams);
+        try {
+            $charge = $this->stripe->charges()->create($sendParams);
 
-        return (object)$charge;
+            return (object)$charge;
+        } catch (\Exception $e) {
+            $errorBag = new ErrorBag(['create_charge' => $e->getMessage()]);
+
+            return $errorBag;
+        }
     }
 
     /**
@@ -319,9 +325,15 @@ class StripePaymentProvider implements PaymentProcessorInterface
         // check currency
         if (! isset($sendParams['currency'])) $sendParams['currency'] = 'usd';
 
-        $charge = $this->stripe->charges()->create($sendParams);
+        try {
+            $charge = $this->stripe->charges()->create($sendParams);
 
-        return (object)$charge;
+            return (object)$charge;
+        } catch (\Exception $e) {
+            $errorBag = new ErrorBag(['create_charge' => $e->getMessage()]);
+
+            return $errorBag;
+        }
     }
 
     /**
@@ -347,9 +359,15 @@ class StripePaymentProvider implements PaymentProcessorInterface
     public function updateCharge($chargeId, $params)
     {
         $sendParams = $this->verifyParams($params, $this->chargeParams);
-        $charge = $this->stripe->charges()->update($chargeId, $sendParams);
+        try {
+            $charge = $this->stripe->charges()->update($chargeId, $sendParams);
 
-        return (object)$charge;
+            return (object)$charge;
+        } catch (\Exception $e) {
+            $errorBag = new ErrorBag(['update_charge' => $e->getMessage()]);
+
+            return $errorBag;
+        }
     }
 
     /**
@@ -361,10 +379,15 @@ class StripePaymentProvider implements PaymentProcessorInterface
     public function captureCharge($chargeId, $amount = null, array $params = [])
     {
         $sendParams = $this->verifyParams($params, $this->chargeParams);
-        $charge = $this->stripe->charges()->capture($chargeId, $amount, $sendParams);
+        try {
+            $charge = $this->stripe->charges()->capture($chargeId, $amount, $sendParams);
 
-        return (object)$charge;
-        //return (isset($response['deleted']) and $response['deleted']);
+            return (object)$charge;
+        } catch (\Exception $e) {
+            $errorBag = new ErrorBag(['capture_charge' => $e->getMessage()]);
+
+            return $errorBag;
+        }
     }
 
     /**

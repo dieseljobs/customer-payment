@@ -19,6 +19,12 @@ trait Chargeable
             $params
         );
 
+        // catch errors
+        if (get_class($charge) === "TheLHC\CustomerPayment\ErrorBag") {
+            $this->paymentProfileErrors = $payment->getErrors();
+            return false;
+        }
+
         return $charge;
     }
 }

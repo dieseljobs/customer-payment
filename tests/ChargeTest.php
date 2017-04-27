@@ -3,13 +3,25 @@
 use TheLHC\CustomerPayment\Tests\TestCase;
 use TheLHC\CustomerPayment\Tests\User;
 use Illuminate\Database\Eloquent\Model as Eloquent;
-//use PaymentProcessor;
 
 class ChargeTest extends TestCase
 {
 
     public $stripe_id = "cus_AKqPLr4lGP5Xkc";
     public $charge_id = "ch_1A38Q9JfQv1xXyoLUSr3y0F7";
+
+    public function testItCanCatchCreateChargeErrors()
+    {
+        $params = [
+            'customer' => $this->stripe_id,
+            'amount' => 'kjsadf',
+            'capture' => false,
+            'description' => 'Test charge',
+            'statement_descriptor' => 'Report Fee',
+        ];
+        $charge = PaymentProcessor::createCharge($params);
+        $this->assertEquals("TheLHC\CustomerPayment\ErrorBag", get_class($charge));
+    }
 
     public function testCanCreateCharge()
     {
