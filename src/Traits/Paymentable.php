@@ -141,6 +141,8 @@ trait Paymentable
         }
 
         $this->verifyFilledAttributes();
+
+        return true;
     }
 
     /**

@@ -8,7 +8,7 @@ class HasManyPaymentsTest extends TestCase
 {
 
     public $stripe_id = "cus_AQuKtXQyM6Byyh";
-    public $stripe_card_id = "card_1A62VZJfQv1xXyoLW0XKVnp2";
+    public $stripe_card_id = "card_1AHDEKJfQv1xXyoLVXbkfnCv";
 
     public function testCanCatchCreatePaymentProfileErrors()
     {
@@ -45,6 +45,7 @@ class HasManyPaymentsTest extends TestCase
         $paymentProfile = new PaymentProfile($attrs);
         $user->payment_profiles()->save($paymentProfile);
         $this->assertEquals(true, !empty($paymentProfile->stripe_card_id));
+        //dd($paymentProfile->stripe_card_id);
     }
 
     public function testCanFindPaymentProfile()
@@ -108,7 +109,8 @@ class HasManyPaymentsTest extends TestCase
             'stripe_id' => $this->stripe_id
         ]);
         $paymentProfile = new PaymentProfile(['stripe_card_id' => 'foobar']);
-        $this->assertEquals(false, $user->payment_profiles()->save($paymentProfile));
+        $user->payment_profiles()->save($paymentProfile);
+        $this->assertEquals(false, $paymentProfile->delete());
         $this->assertEquals(true, is_array($paymentProfile->getPaymentProfileErrors()));
     }
 
