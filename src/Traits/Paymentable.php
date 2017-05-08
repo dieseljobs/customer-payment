@@ -82,7 +82,7 @@ trait Paymentable
         );
 
         // catch errors
-        if (get_class($payment) === "TheLHC\CustomerPayment\ErrorBag") {
+        if (is_object($deleted) and get_class($payment) === "TheLHC\CustomerPayment\ErrorBag") {
             $this->paymentProfileErrors = $payment->getErrors();
             return false;
         }
@@ -131,7 +131,7 @@ trait Paymentable
         );
 
         // catch errors
-        if (get_class($payment) === "TheLHC\CustomerPayment\ErrorBag") {
+        if (is_object($deleted) and get_class($payment) === "TheLHC\CustomerPayment\ErrorBag") {
             $this->paymentProfileErrors = $payment->getErrors();
             return false;
         }
@@ -156,7 +156,7 @@ trait Paymentable
         );
 
         // catch errors
-        if (get_class($deleted) === "TheLHC\CustomerPayment\ErrorBag") {
+        if (is_object($deleted) and get_class($deleted) === "TheLHC\CustomerPayment\ErrorBag") {
             $this->paymentProfileErrors = $deleted->getErrors();
             return false;
         }

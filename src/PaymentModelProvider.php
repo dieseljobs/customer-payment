@@ -47,7 +47,8 @@ class PaymentModelProvider extends Model
          * @return mixed
          */
         static::deleting(function ($model) {
-            $model->deletePaymentProfile();
+            $deletePaymentProfile = $model->deletePaymentProfile();
+            if ( !$deletePaymentProfile) return false;
         });
     }
 
