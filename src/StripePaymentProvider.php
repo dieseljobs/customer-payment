@@ -206,7 +206,7 @@ class StripePaymentProvider implements PaymentProcessorInterface
 
             return (object)$card;
         } catch (\Exception $e) {
-            $errorBag = new ErrorBag(['create_payment_profile' => $e->getMessage()]);
+            $errorBag = new ErrorBag([$e->getMessage()]);
 
             return $errorBag;
         }
@@ -242,7 +242,7 @@ class StripePaymentProvider implements PaymentProcessorInterface
 
             return (object)$card;
         } catch (\Exception $e) {
-            $errorBag = new ErrorBag(['update_payment_profile' => $e->getMessage()]);
+            $errorBag = new ErrorBag([$e->getMessage()]);
 
             return $errorBag;
         }
@@ -262,7 +262,7 @@ class StripePaymentProvider implements PaymentProcessorInterface
 
             return (isset($response['deleted']) and $response['deleted']);
         } catch (\Exception $e) {
-            $errorBag = new ErrorBag(['delete_payment_profile' => $e->getMessage()]);
+            $errorBag = new ErrorBag([$e->getMessage()]);
 
             return $errorBag;
         }
@@ -307,7 +307,7 @@ class StripePaymentProvider implements PaymentProcessorInterface
 
             return (object)$charge;
         } catch (\Exception $e) {
-            $errorBag = new ErrorBag(['create_charge' => $e->getMessage()]);
+            $errorBag = new ErrorBag([$e->getMessage()]);
 
             return $errorBag;
         }
@@ -330,7 +330,7 @@ class StripePaymentProvider implements PaymentProcessorInterface
 
             return (object)$charge;
         } catch (\Exception $e) {
-            $errorBag = new ErrorBag(['create_charge' => $e->getMessage()]);
+            $errorBag = new ErrorBag([$e->getMessage()]);
 
             return $errorBag;
         }
@@ -364,7 +364,7 @@ class StripePaymentProvider implements PaymentProcessorInterface
 
             return (object)$charge;
         } catch (\Exception $e) {
-            $errorBag = new ErrorBag(['update_charge' => $e->getMessage()]);
+            $errorBag = new ErrorBag([$e->getMessage()]);
 
             return $errorBag;
         }
@@ -384,7 +384,7 @@ class StripePaymentProvider implements PaymentProcessorInterface
 
             return (object)$charge;
         } catch (\Exception $e) {
-            $errorBag = new ErrorBag(['capture_charge' => $e->getMessage()]);
+            $errorBag = new ErrorBag([$e->getMessage()]);
 
             return $errorBag;
         }
